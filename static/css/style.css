@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
+/*
+ *
+ *   INSPINIA - Responsive Admin Theme
+ *   version 2.7.1
+ *
+*/
+html, body
+{
+  background-color: #000000;
+  height:100%;
+  margin:0;
+  padding: 0;
+  left:0;
+  top:0;
+  width:100%;
+}
+.fill
+{
+  position: relative;
+  top: 50%;
+  transform: perspective(1px) translateY(-50%);
+
+  /*padding-top:2%;*/
+}
+.scoreboard
+{
+  border-radius: 24px;
+  border:2px solid #ffffff;
+  padding-top:9px;
+  height: 35%;
+  margin-top:14px;
+}
+.scoreboard-1
+{
+  border-radius: 24px;
+  border:2px solid #ffffff;
+  padding-top:9px;
+  height: 70%;
+  margin-top:24px;
+}
+.red
+{
+  background:red;
+  color:#ffffff;
+}
+.white
+{
+  background: #ffffff;
+  color:#000000;
+}
+.header div
+{
+  float:left;
+}
+.header .col-center-block .gametime
+{
+  font-size:44px;
+  color:#ffffff;
+  text-align: center;
+}
+.header .gamelabel
+{
+  color:#ffffff;
+  font-size: 44px;
+}
+.header .gameinf
+{
+  color:#ffffff;
+  font-size: 64px;
+  font-weight: normal;
+  float:left;
+  margin-left: 9%;
+  margin-top:10%;
+  text-align: center; 
+}
+.header .col-center-block
+{
+   float: none;
+   display: block;
+   margin: 0 auto;
+   width:100%;
+   text-align: center;
+   list-style: none;
+}
+
+.header
+{
+  width:100%;
+  margin-top:10px;
+}
+
+.scorerow li
+{
+  display: table-cell;
+  padding:3px;
+  
+  
+}
+
+.scoreboard .scorerow .space
+{
+  padding-left:10px;
+}
+
+.scorerow .num
+{
+  text-align: right;
+}
+.scorerow .name
+{
+  text-align: center;
+}
+
+.scorerow .score
+{
+  text-align: center;
+}
+
+.scorerow .flag
+{
+  text-align: center;
+}
+.scorerow .flag img
+{
+  
+}
+
+.scoreboard .title
+{
+  font-size: 28px;
+  text-align: center;
+}
+
+.scorerow
+{
+  /*line-height: 32px;*/
+  padding-left:10px;
+  padding-right: 10px;
+  font-size:20px;
+  padding-top:6px;
+  list-style: none;
+
+}
+.bold
+{
+  font-weight: bold;
+}
+.scoreboard-1 .scorerow .space
+{
+  padding-left:10px;
+}
+
+@-webkit-keyframes borderBlink {    
+    from, to {    
+        border-color: transparent    
+    }    
+    50% {    
+        border-color: gold    
+    }    
+}    
+@keyframes borderBlink {    
+    from, to {    
+        border-color: transparent    
+    }    
+    50% {    
+        border-color: gold    
+    }    
+}
+
+.borderBlink{    
+    border:4px solid gold;
+    -webkit-animation: borderBlink 1s step-end infinite;    
+    animation: borderBlink 1s step-end infinite;    
+}    
+
+.scoreboard-1 .title
+{
+  font-size: 28px;
+  text-align: center;
+}
+.active
+{display: block;}
+.inactive
+{
+  display: none;
+}
+
+.scorefeed
+{
+  border-radius: 18px;
+  border:2px solid #000000;
+  padding-left:15px;
+  margin-left:30px;
+  margin-right:15px;
+  margin-top:14px;
+  padding-top:10px;
+  height: 70%;
+}
+.scorefeed .feedrow
+{
+  display: inline-block;
+  clear: both;
+  width:100%;
+  
+}
+.scorepanel
+{
+  height:100%;
+}
+.playerlimit
+{
+  line-height: 16px;
+  padding-left: 22px;
+
+  font-size: 24px;
+}
+.spec
+{
+  
+}

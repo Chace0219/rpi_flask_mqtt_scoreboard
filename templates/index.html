@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ScoreBoard</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+    </style>
+</head>
+<body>
+    <div class="container-fluid fill">
+        <div class="row">
+            <div class="header">
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                <div class="logo">
+                        <img src ="static/image/logo.png">
+                </div>
+                <ul class="col-center-block">
+                    <li class="gametime">XX:XX</li>
+                    <li class="gamelabel">Party Game</li>
+                </ul>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="gameinf">INFINITY</div>
+                </div> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="entire_panel">
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 scorepanel">
+                    
+                    
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <ul class="scorefeed white">
+                       
+                    </ul>
+                </div>
+            </div>
+        </div>    
+    </div>
+</body>
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/socket.io.min.js"></script>
+
+<script src="/static/js/action.js"></script>
+<script type="text/javascript">
+    
+    function score_display(scoredata)
+    {
+
+        var score_array = JSON.parse(scoredata);
+        var teamcount = score_array.teamcount;
+        $('.gamelabel').text(score_array.name);
+        var gametime = score_array.remaintime;
+        var min = Math.floor(gametime/60);
+        var sec = parseInt(gametime) - parseInt(min*60);
+        if(min <10)
+            min = "0"+min;
+        if(sec <10)
+            sec = "0"+sec;
+        $('.gametime').text(min +":"+sec);
+
+        
+        var teamcount = score_array.teamcount;
+        var html ='';
+        $('.scorefeed').html('');
+        $('.scorepanel').html('');
+        var j = 0;            
+        Object.keys(score_array.teams).forEach(function(key)
+        {
+            var playercount = score_array.teams[key]['playercount'];
+            var column = score_array.teams[key]['twicecolumn'];
+            //console.log(score_array.teams[key]['players']);
+            if(teamcount =='2')
+            {
+                if(column === false)
+                {
+                    html +='<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>';
+                    var playerlimit = 20;
+                }
+                else
+                {
+                    var playerlimit = 40;   
+                }
+                var board ='scoreboard-1';
+                    
+            }
+            else if(teamcount =='3' )
+            {
+                /*if(column ===false)
+                    html +='<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>';
+                */
+                var board ='scoreboard-1';
+                if(column === false)    
+                    var playerlimit = 20;
+                else
+                    var playerlimit = 40;
+            }
+            else if(teamcount =='5' || teamcount =='6')
+            {
+                /*if(column ===false)
+                    html +='<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>';
+                */
+                var board ='scoreboard';
+                if(column === false) 
+                    var playerlimit = 10;     
+                else
+                    var playerlimit = 20;
+            }
+            else if(teamcount =='4')
+            {
+                var board ='scoreboard-1';
+                var playerlimit = 20;    
+            }
+            else
+            {
+                var board ='scoreboard';
+                if(column === false) 
+                    var playerlimit = 10;     
+                else
+                    var playerlimit = 20;
+                      
+            }              
+
+            if(score_array.teams[key]["lead"] ==true)
+                var flashclass= "borderBlink";
+            else
+                var flashclass= "";
+            if( column ==true)
+            {
+                html += '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">';   
+            }
+            else
+            {
+                html += '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">';
+            }
+            html +='<div class="'+board+' '+flashclass+'" style="background:#'+score_array.teams[key]["backcolor"]+';color:#'+
+            score_array.teams[key]["forecolor"]+'">';
+            html +='<div class="title">'+score_array.teams[key]['name']+' : '+score_array.teams[key]['score']+'</div>';
+            if(column === true)
+            {
+                html +='<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 spec"></div><div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 spec"></div>';
+            }
+            
+
+            var i = 0;
+                     
+            Object.keys(score_array.teams[key]['players']).forEach(function(keys)
+            {
+                if (i < playerlimit)
+                {
+                    var bold = "";
+                    var scorehtml ="";
+
+                    switch(score_array.teams[key]['players'][keys]['badge'])
+                    {
+                        case 1:
+                        {
+                            var flag_html = '<img src="static/image/gold.png">';
+                            bold +="bold";
+                            break;
+                        }
+                        case 2:
+                        {
+                            var flag_html = '<img src="static/image/silver.png">';
+                            break;
+                        }
+                        case 3:
+                        {
+                            var flag_html = '<img src="static/image/bronze.png">';
+                            break;
+                        }
+                        case 4:
+                        {
+                            var flag_html = '<img>';
+                            break;
+                        }
+                        case 5:
+                        {
+                            var flag_html= '<img>';
+                            break;
+                        }
+                        default:
+                        {
+                            var flag_html= '<img>';
+                            break;
+                        }    
+                    }
+
+                                         
+                    html += '<ul class="scorerow '+bold+'">';
+                    html += '<li class="num">'+score_array.teams[key]['players'][keys]['number']+'</li>';
+                    html += '<li class="name">'+score_array.teams[key]['players'][keys]['name']+'</li>';
+                    html += '<li class="score">'+score_array.teams[key]['players'][keys]['score']+'</li>';
+                    html += '<li class="flag">'+flag_html+'</li>';
+                    html +='</ul>';
+                    
+                    
+                    
+                }
+                i++;
+                
+            })
+            if(score_array.teams[key]['playercount'] > playerlimit)
+            {
+                html += '<p class="playerlimit">...</p>';
+            }
+            html +='</div></div>';
+
+
+            j++;
+        });
+
+        var feed_html ="";
+        var feeds = score_array.feeds;
+        var feedcount = score_array.feedcount;
+        var j = 0;
+        
+
+        Object.keys(feeds).forEach(function(key)
+        {
+            var count = Math.ceil(score_array.feeds[key].length/40);
+
+        });
+
+        /*if(feedcount > 20)
+        {
+            feed_html +='<li class="feedrow">...</li>';     
+        }*/
+        /*Object.keys(feeds).forEach(function(key)
+        {
+            if(feedcount > 20)
+            {
+                if(key > (feedcount -20))
+                {
+                    var count = Math.ceil(score_array.feeds[key].length/40);
+                    m= m +count;
+                    feed_html +='<li class="feedrow">'+score_array.feeds[key]+'</li>';
+                    
+                }
+            }
+            else
+            {
+                feed_html +='<li class="feedrow">'+score_array.feeds[key]+'</li>';
+                    
+            }
+
+            j++;
+        });*/
+        var count = 0;
+        var flow = false;
+        var t =0;
+        for (var p = feedcount; p > 0; p --)        
+        {
+            var feeds=  new String (score_array.feeds[p]);
+
+            count = count + Math.ceil(feeds.length/40);
+            if(count > 25)
+            {
+                t = p;
+                flow = true;
+                break;
+                
+                //$('.scorefeed').append('<li class="feedrow">'+score_array.feeds[p]+'</li>');
+            }
+            //    feed_html +='<li class="feedrow">...</li>';
+            //else
+            //    feed_html +='<li class="feedrow">'+feeds+'</li>';
+        }
+        if(flow ==true)
+        {
+             feed_html +='<li class="feedrow">...</li>';
+        }
+        
+        for (var f = t; f <feedcount ; f++)
+        {
+            feed_html +='<li class="feedrow">'+score_array.feeds[f]+'</li>';
+        }       
+        $('.scorepanel').html(html);
+        $('.scorefeed').html(feed_html);
+        
+
+
+                
+               
+        var original_height = jQuery(window).height();
+        if($('.scoreboard').length  > 0)
+        {
+            $('.scoreboard').height((original_height*0.34).toFixed(2));
+            $('.scorerow').height(((original_height*0.34 - 230)/10).toFixed(2));
+
+            var k = 0;
+            $(".scoreboard").each(function()
+            {
+                if($(this).children(".spec").length > 0)
+                {
+                    $(this).find(".scorerow").each(function(key,value)
+                    {   
+                        var page = Math.floor(key/10);
+                        $('.scoreboard:eq('+k+') .spec:eq('+page+')').append(value);
+                                        
+                    })
+                    
+                }
+                k++;    
+            });
+          
+        }
+        else
+        {
+            $('.scoreboard-1').height((original_height*0.7).toFixed(2));
+            $('.scorerow').height(((original_height*0.7 - 380)/20).toFixed(2));
+
+            var k = 0;
+            $(".scoreboard-1").each(function()
+            {
+                if($(this).children(".spec").length > 0)
+                {
+                    $(this).find(".scorerow").each(function(key,value)
+                    {   
+                        var page = Math.floor(key/20);
+                        $('.scoreboard-1:eq('+k+') .spec:eq('+page+')').append(value);
+                                        
+                    })
+                    
+                }
+                k++;    
+            });
+            
+        } 
+        
+        if(  $('.scoreboard-1').length > 0)
+        {
+
+            $(".scoreboard-1").each(function(key,value)
+            {
+                if($(this).find('.scorerow').length >20) 
+                {
+                   $(this).find('.num').width($(this).width()*0.03);
+                   
+                   $(this).find('.name').width($(this).width()*0.2);
+                   
+                   $(this).find('.score').width($(this).width()*0.08);
+                   $(this).find('.flag').width($(this).width()*0.05);
+                   $(this).find('.flag img').width($(this).width()*0.04);
+                   $(this).css("font-size", ($(this).width()*0.035).toFixed(2)+"px");
+
+                   $(this).find('.playerlimit').css("padding-left", ($(this).width()*0.04).toFixed(2)+"px");  
+                }
+                else
+                {
+                   $(this).find('.num').width($(this).width()*0.12);
+                   
+                   $(this).find('.name').width($(this).width()*0.4);
+                   
+                   $(this).find('.score').width($(this).width()*0.2);
+                   $(this).find('.flag').width($(this).width()*0.1);
+                   $(this).find('.flag img').width($(this).width()*0.08);
+                   $(this).css("font-size", ($(this).width()*0.055).toFixed(2)+"px"); 
+                   
+                   $(this).find('.playerlimit').css("padding-left", ($(this).width()*0.09).toFixed(2)+"px");  
+                }
+            }); 
+               
+        }
+        else
+        {
+            $(".scoreboard").each(function(key,value)
+            {
+                if($(this).find('.scorerow').length >10) 
+                {
+                   $(this).find('.num').width($(this).width()*0.03);
+                   
+                   $(this).find('.name').width($(this).width()*0.2);
+                   
+                   $(this).find('.score').width($(this).width()*0.08);
+                   $(this).find('.flag').width($(this).width()*0.05 -1.7);
+                   $(this).find('.flag img').width($(this).width()*0.04 -1.7);
+                   $(this).css("font-size", ($(this).width()*0.035).toFixed(2)+"px");
+                   $(this).find('.playerlimit').css("padding-left", ($(this).width()*0.04).toFixed(2)+"px");   
+                }
+                else
+                {
+                    $(this).find('.num').width($(this).width()*0.12);
+                   
+                   $(this).find('.name').width($(this).width()*0.4);
+                   
+                   $(this).find('.score').width($(this).width()*0.2);
+                   $(this).find('.flag').width($(this).width()*0.1);
+                   $(this).find('.flag img').width($(this).width()*0.08);
+                   $(this).css("font-size", ($(this).width()*0.055).toFixed(2)+"px");
+                   $(this).find('.playerlimit').css("padding-left", ($(this).width()*0.09).toFixed(2)+"px");   
+                    
+                }
+            });
+        }
+
+
+               
+        //$('.scoreboard .scorerow').height((original_height*0.03).toFixed(2));
+        //$('.scoreboard-1 .scorerow').height((original_height*0.03).toFixed(2));
+        $('.scorerow .flag img').css("padding-bottom", $('.scorerow .flag').height()* 0.1+"px");
+
+        $('.scorefeed').height((original_height*0.7).toFixed(2));
+
+        $('.scorefeed').css("font-size", ($('.scorefeed').width()*0.05).toFixed(2)+"px");
+
+
+        $(".scoreboard .feedrow").each(function()
+        {
+            $(this).css("line-height", ((original_height*0.7 - 20)/20).toFixed(2)+"px");
+        });    
+
+        if($(".borderBlink").length > 0)
+        {
+            if($('.scoreboard').length > 0)
+                $('.borderBlink').height((original_height*0.34).toFixed(2) -4);         
+            else
+                $('.borderBlink').height((original_height*0.7).toFixed(2) -4);
+        }
+
+        
+    }
+
+    
+    function time_display(timedata)
+    {
+        var time_array = JSON.parse(timedata);
+        var time = time_array["gametime"];
+        var min = Math.floor(time/60);
+        var sec = parseInt(time) - parseInt(min*60);
+        if(min <10)
+            min = "0"+min;
+        if(sec <10)
+            sec = "0"+sec;
+        $('.gametime').text(min +":"+sec);
+
+        
+    }
+
+   
+    
+   
+</script>
+</html>
